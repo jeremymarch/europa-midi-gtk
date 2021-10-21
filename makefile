@@ -1,8 +1,8 @@
 CC = gcc
 DEBUG = -g -Wall --pedantic
 #DEBUG = -O3 -march=pentium3
-INCLUDES = -I/usr/include/mysql
-LIBS = -L/usr/local/mysql/lib -lmysqlclient -lz
+INCLUDES = `pkg-config --cflags mariadb`
+LIBS = `pkg-config --libs mariadb`
 GTK_THD_LIBS = `pkg-config --libs gthread-2.0 gtk+-2.0`
 GTK_LIBS = `pkg-config --libs gtk+-2.0`
 
