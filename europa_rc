@@ -1,0 +1,20 @@
+style "my-style" { fg[NORMAL] = "white" }
+style "my-style2" { fg[NORMAL] = "red" }
+
+style "my-button" { bg[ACTIVE] = "orange" }
+
+style "my-window" { bg[NORMAL] = "black" }
+
+widget_class "GtkWindow.GtkVBox.GtkTable.GtkHBox.GtkVBox.GtkLabel" style "my-style"
+
+widget_class "GtkWindow.GtkVBox.GtkHBox.GtkButton.GtkLabel" style "my-style2"
+
+widget_class "GtkWindow.GtkVBox.GtkTable.GtkFrame.GtkLabel" style "my-style"
+
+widget_class "GtkWindow.GtkVBox.GtkStatusbar.*.GtkLabel" style "my-style"
+
+class "GtkVScale" style "my-style"
+
+class "GtkButton" style "my-button"
+
+widget_class "GtkWindow" style "my-window"
