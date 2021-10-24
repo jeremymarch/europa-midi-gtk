@@ -3,6 +3,8 @@
 #include "europa_mysql.h"
 #include "europa.h"
 
+MYSQL *mysql;
+
 static char *
 strmov (register char *dst, register const char *src)
 {

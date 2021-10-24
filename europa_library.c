@@ -6,6 +6,8 @@
 #include "europa_mysql.h"
 #include "europa_library.h"
 
+extern MYSQL *mysql;
+
 static gboolean
 libSetPatch (GtkTreeSelection *sel, gpointer patchForm)
 {

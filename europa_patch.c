@@ -7,6 +7,8 @@
 #include "europa_mysql.h"
 #include "europa_library.h"
 
+extern MYSQL *mysql;
+
 snd_seq_t *seq_handle;
 
 int portidIn;
@@ -1419,7 +1421,7 @@ main (int argc, char **argv)
 
   gtk_init(&argc, &argv);
 
-  if ((mysql = do_connect ("localhost", "midi", "1234", "europa", 0, NULL, 0)) == NULL)
+  if ((mysql = do_connect ("localhost", "root", "clam1234", "europa", 0, NULL, 0)) == NULL)
   {
     g_print("Could not connect to database\n");
     exit(1);

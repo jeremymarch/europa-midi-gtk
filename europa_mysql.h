@@ -1,5 +1,3 @@
-MYSQL *mysql;
-
 void
 do_disconnect (MYSQL *conn);
 
