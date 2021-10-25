@@ -83,9 +83,9 @@ real_save_patch (unsigned char *p, unsigned int len)
   char *end;
 
   end  = strmov (query, "INSERT INTO patches VALUES (NULL, '");
-  end += mysql_real_escape_string(mysql, end, &p[PATCH_NAME_LEN_BYTE + 1], p[PATCH_NAME_LEN_BYTE]);
+  end += mysql_real_escape_string(mysql, end, (char*)&p[PATCH_NAME_LEN_BYTE + 1], p[PATCH_NAME_LEN_BYTE]);
   end  = strmov (end, "', '', '");
-  end += mysql_real_escape_string(mysql, end, p, len);
+  end += mysql_real_escape_string(mysql, end, (char*)p, len);
   end  = strmov (end, "', NULL, NOW())");
 
   if (mysql_real_query(mysql, query, end - query) != 0)

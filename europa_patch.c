@@ -1,3 +1,8 @@
+#define _GNU_SOURCE //fixes realpath warning
+
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <gtk/gtk.h>
 #include <alsa/asoundlib.h>
 #include <mysql.h>
@@ -1409,6 +1414,20 @@ poll_func (GIOChannel *chan, GIOCondition con, gpointer patchForm)
   return TRUE;
 }
 
+gchar *db_user_name = NULL;
+gchar *db_password = NULL;
+gchar *db_host = NULL;
+gchar *db_db = NULL;
+
+static GOptionEntry entries[] =
+{
+  {"user", 'u', 0, G_OPTION_ARG_STRING, &db_user_name, "config file", "file"},
+  {"host", 'h', 0, G_OPTION_ARG_STRING, &db_host, "config file", "file"},
+  {"pass", 'p', 0, G_OPTION_ARG_STRING, &db_password, "config file", "file"},
+  {"database", 'd', 0, G_OPTION_ARG_STRING, &db_db, "config file", "file"},
+  { NULL }
+};
+
 int
 main (int argc, char **argv)
 {
@@ -1417,11 +1436,26 @@ main (int argc, char **argv)
   struct pollfd *pfd;
   EuropaPatchForm *patchForm;
 
-  gtk_rc_parse ("/home/jeremy/europa_rc");
+  char pathbuf[PATH_MAX];
+  char pathbuf2[PATH_MAX];
+  char *res = realpath(argv[0], pathbuf);
+  g_snprintf(pathbuf2, PATH_MAX, "%.*seuropa_rc", (int)strlen(res) - 6, res);
+  //g_print("arg: %s\n", pathbuf2);
+  gtk_rc_parse (pathbuf2);
+  //gtk_rc_parse ("/home/jeremy/Documents/code/europa-midi-gtk/europa_rc");
+  
+  GError * error = NULL;
+  GOptionContext * context = g_option_context_new ("- convert fastq");
+  g_option_context_add_main_entries (context, entries, NULL);
+
+  if (!g_option_context_parse (context, &argc, &argv, &error)){
+      g_print("error: %s\n", error->message);
+      exit(1);
+  }
 
   gtk_init(&argc, &argv);
-
-  if ((mysql = do_connect ("localhost", "root", "clam1234", "europa", 0, NULL, 0)) == NULL)
+  
+  if ((mysql = do_connect (db_host, db_user_name, db_password, db_db, 0, NULL, 0)) == NULL)
   {
     g_print("Could not connect to database\n");
     exit(1);

@@ -1,5 +1,5 @@
-CC = gcc
-DEBUG = -g -Wall --pedantic
+CC = gcc -std=c99
+DEBUG = -g -Wall -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_44 -DGLIB_VERSION_MAX_ALLOWED=GLIB_VERSION_2_60 -DGTK_DISABLE_DEPRECATED
 #DEBUG = -O3 -march=pentium3
 INCLUDES = `mysql_config --cflags`
 LIBS = `mysql_config --libs`
