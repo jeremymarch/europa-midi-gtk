@@ -142,11 +142,34 @@ bintodec (const guchar *bin, guint len, gboolean space)
   return dst; /* must be freed by caller */
 }
 
+void tohex(unsigned char * in, size_t insz, char * out, size_t outsz)
+{
+    unsigned char * pin = in;
+    const char * hex = "0123456789ABCDEF";
+    char * pout = out;
+    for(; pin < in+insz; pout +=2, pin++){
+        pout[0] = hex[(*pin>>4) & 0xF];
+        pout[1] = hex[ *pin     & 0xF];
+        //pout[2] = ':';
+        if (pout + 2 - out > outsz){
+            /* Better to truncate output string than overflow buffer */
+            /* it would be still better to either return a status */
+            /* or ensure the target buffer is large enough and it never happen */
+            break;
+        }
+    }
+    pout[0] = 0;
+}
+
 int
 validate_patch (guchar *p, gint len)
 {
   int i;
   int first_slider = PATCH_HEADER_LENGTH + p[PATCH_NAME_LEN_BYTE];
+
+  gchar buf[43];
+	tohex(p, 6, buf, 43);
+  g_print("validate: %s\n", buf);
 
   if (len > PATCH_MAX_LEN )
   {
@@ -171,6 +194,7 @@ validate_patch (guchar *p, gint len)
       p[5] != 0x05)
   {
     strcpy(patchError, "Patch Header is Invalid");
+    g_print("error: %s\n", buf);
     return 0;
   }
 

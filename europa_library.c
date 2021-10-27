@@ -14,7 +14,8 @@ libSetPatch (GtkTreeSelection *sel, gpointer patchForm)
   GtkTreeIter iter;
   GtkTreeModel *model;
   gint patch_id;
-  gchar query[128];
+  gint querylen = 128;
+  gchar query[querylen];
   MYSQL_RES *res_set;
   MYSQL_ROW  row;
   unsigned long *len;
@@ -23,7 +24,7 @@ libSetPatch (GtkTreeSelection *sel, gpointer patchForm)
 
   gtk_tree_model_get (model, &iter, 0, &patch_id, -1);
 
-  snprintf (query, 128, "SELECT patch FROM patches WHERE patch_id = %i", patch_id);
+  snprintf (query, querylen, "SELECT UNHEX(patch) FROM patches WHERE patch_id = %i", patch_id);
 
   if (mysql_query (mysql, query) != 0)
   {

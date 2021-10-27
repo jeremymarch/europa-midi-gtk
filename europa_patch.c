@@ -1439,7 +1439,7 @@ main (int argc, char **argv)
   char pathbuf[PATH_MAX];
   char pathbuf2[PATH_MAX];
   char *res = realpath(argv[0], pathbuf);
-  g_snprintf(pathbuf2, PATH_MAX, "%.*seuropa_rc", (int)strlen(res) - 6, res);
+  g_snprintf(pathbuf2, PATH_MAX, "%.*seuropa_rc", (int)strlen(res) - 6, res); //program path - length of program name + rc name
   //g_print("arg: %s\n", pathbuf2);
   gtk_rc_parse (pathbuf2);
   //gtk_rc_parse ("/home/jeremy/Documents/code/europa-midi-gtk/europa_rc");

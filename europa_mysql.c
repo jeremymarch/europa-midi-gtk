@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <mysql.h>
+#include <string.h>
 #include "europa_mysql.h"
 #include "europa.h"
 
@@ -82,10 +83,14 @@ real_save_patch (unsigned char *p, unsigned int len)
   char query[1000];
   char *end;
 
+  char buf[1000];
+	tohex(p, len, buf, 1000);
+  printf("insert: %s\n", buf);  
+
   end  = strmov (query, "INSERT INTO patches VALUES (NULL, '");
   end += mysql_real_escape_string(mysql, end, (char*)&p[PATCH_NAME_LEN_BYTE + 1], p[PATCH_NAME_LEN_BYTE]);
   end  = strmov (end, "', '', '");
-  end += mysql_real_escape_string(mysql, end, (char*)p, len);
+  end += mysql_real_escape_string(mysql, end, buf, strlen(buf));
   end  = strmov (end, "', NULL, NOW())");
 
   if (mysql_real_query(mysql, query, end - query) != 0)
@@ -96,3 +101,4 @@ real_save_patch (unsigned char *p, unsigned int len)
   }
   return 1;
 }
+

@@ -7,3 +7,5 @@ do_connect (char *host_name, char *user_name, char *password, char *db_name,
 
 int
 real_save_patch (unsigned char *p, unsigned int len);
+
+void tohex(unsigned char * in, size_t insz, char * out, size_t outsz);
