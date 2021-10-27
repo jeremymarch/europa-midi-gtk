@@ -12,8 +12,8 @@ static gboolean
 libSetPatch (GtkTreeSelection *sel, gpointer patchForm)
 {
   GtkTreeIter iter;
-  GtkTreeModel *model;
-  gint patch_id;
+  GtkTreeModel *model = NULL;
+  gint patch_id = 0;
   gint querylen = 128;
   gchar query[querylen];
   MYSQL_RES *res_set;
@@ -21,6 +21,8 @@ libSetPatch (GtkTreeSelection *sel, gpointer patchForm)
   unsigned long *len;
 
   gtk_tree_selection_get_selected (sel, &model, &iter);
+
+  g_print("libSetPatch %d\n", model);
 
   gtk_tree_model_get (model, &iter, 0, &patch_id, -1);
 
@@ -54,9 +56,10 @@ libSetPatch (GtkTreeSelection *sel, gpointer patchForm)
 int
 fill_library(GtkListStore *listStore)
 {
+  g_print("fill library %d\n", listStore);
   MYSQL_RES *res_set;
   MYSQL_ROW  row;
-  gchar query[] = "SELECT patch_id, name FROM patches ORDER BY name";
+  gchar query[] = "SELECT patch_id, name FROM patches ORDER BY name;";
   GtkTreeIter iter;
 
   if (mysql_query(mysql, query) != 0)
@@ -90,7 +93,7 @@ cb_fill(GtkWidget *button, gpointer list)
   GtkTreeSelection *sel;
 
   model = gtk_tree_view_get_model(GTK_TREE_VIEW(list));
-
+  g_print("cb_fill %d\n", model);
   sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(list));
 
   g_signal_handlers_block_by_func(sel, libSetPatch, NULL);
