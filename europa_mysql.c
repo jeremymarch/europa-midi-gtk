@@ -80,12 +80,12 @@ do_disconnect (MYSQL *conn)
 int
 real_save_patch (unsigned char *p, unsigned int len)
 {
-  char query[1000];
+  char query[1024];
   char *end;
 
-  char buf[1000];
-	tohex(p, len, buf, 1000);
-  printf("insert: %s\n", buf);  
+  char buf[1024];
+	tohex(p, len, buf, 1024);
+  //printf("insert: %s\n", buf);  
 
   end  = strmov (query, "INSERT INTO patches VALUES (NULL, '");
   end += mysql_real_escape_string(mysql, end, (char*)&p[PATCH_NAME_LEN_BYTE + 1], p[PATCH_NAME_LEN_BYTE]);

@@ -20,43 +20,41 @@ libSetPatch (GtkTreeSelection *sel, gpointer patchForm)
   MYSQL_ROW  row;
   unsigned long *len;
 
-  gtk_tree_selection_get_selected (sel, &model, &iter);
+  if (gtk_tree_selection_get_selected (sel, &model, &iter)) {
 
-  g_print("libSetPatch %d\n", model);
+    gtk_tree_model_get (model, &iter, 0, &patch_id, -1);
 
-  gtk_tree_model_get (model, &iter, 0, &patch_id, -1);
+    snprintf (query, querylen, "SELECT UNHEX(patch) FROM patches WHERE patch_id = %i", patch_id);
 
-  snprintf (query, querylen, "SELECT UNHEX(patch) FROM patches WHERE patch_id = %i", patch_id);
+    if (mysql_query (mysql, query) != 0)
+    {
+      return FALSE;
+    }
+    if ((res_set = mysql_store_result (mysql)) == NULL)
+    {
+      g_print ("store result failed");
+      return FALSE;
+    }
 
-  if (mysql_query (mysql, query) != 0)
-  {
-    return FALSE;
-  }
-  if ((res_set = mysql_store_result (mysql)) == NULL)
-  {
-    g_print ("store result failed");
-    return FALSE;
-  }
+    if ((row = mysql_fetch_row (res_set)) == NULL)
+    {
+      mysql_free_result (res_set);
+      return FALSE;
+    }
 
-  if ((row = mysql_fetch_row (res_set)) == NULL)
-  {
+    len = mysql_fetch_lengths (res_set);
+
+    patch_received ((EuropaPatchForm *) patchForm, (guchar *) row[0], (unsigned int) len[0]);  
+
     mysql_free_result (res_set);
-    return FALSE;
+
   }
-
-  len = mysql_fetch_lengths (res_set);
-
-  patch_received ((EuropaPatchForm *) patchForm, (guchar *) row[0], (unsigned int) len[0]);  
-
-  mysql_free_result (res_set);
-
   return FALSE;
 }
 
 int
 fill_library(GtkListStore *listStore)
 {
-  g_print("fill library %d\n", listStore);
   MYSQL_RES *res_set;
   MYSQL_ROW  row;
   gchar query[] = "SELECT patch_id, name FROM patches ORDER BY name;";
@@ -86,6 +84,9 @@ fill_library(GtkListStore *listStore)
   return 1;
 }
 
+gulong sigSelectionChanged = 0;
+gulong sigClicked = 0;
+
 gboolean
 cb_fill(GtkWidget *button, gpointer list)
 {
@@ -93,14 +94,11 @@ cb_fill(GtkWidget *button, gpointer list)
   GtkTreeSelection *sel;
 
   model = gtk_tree_view_get_model(GTK_TREE_VIEW(list));
-  g_print("cb_fill %d\n", model);
   sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(list));
 
-  g_signal_handlers_block_by_func(sel, libSetPatch, NULL);
-
-  fill_library(GTK_LIST_STORE((GtkListStore *) model));
-
-  g_signal_handlers_unblock_by_func(sel, libSetPatch, NULL);
+  g_signal_handler_block(sel, sigSelectionChanged);
+  fill_library(GTK_LIST_STORE(model));
+  g_signal_handler_unblock(sel, sigSelectionChanged);
 
   return FALSE;
 }
@@ -109,9 +107,9 @@ gint
 draw_library_window(EuropaPatchForm *patchForm)
 {
   GtkWidget *window, *list, *button, *vbox;
-  GtkListStore *listStore;
-  GtkCellRenderer *renderer;
-  GtkTreeSelection *sel;
+  GtkListStore *listStore = NULL;
+  GtkCellRenderer *renderer = NULL;
+  GtkTreeSelection *sel = NULL; 
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_default_size(GTK_WINDOW(window), 300, 700);
@@ -139,8 +137,8 @@ draw_library_window(EuropaPatchForm *patchForm)
 
   sel = gtk_tree_view_get_selection (GTK_TREE_VIEW(list));
 
-  g_signal_connect (G_OBJECT(sel), "changed", G_CALLBACK(libSetPatch), (gpointer) patchForm);
-  g_signal_connect (G_OBJECT(button), "clicked", G_CALLBACK(cb_fill), (gpointer) list);
+  sigSelectionChanged = g_signal_connect (G_OBJECT(sel), "changed", G_CALLBACK(libSetPatch), (gpointer) patchForm);
+  sigClicked = g_signal_connect (G_OBJECT(button), "clicked", G_CALLBACK(cb_fill), (gpointer) list);
 
   fill_library(listStore);
 

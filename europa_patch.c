@@ -1191,7 +1191,7 @@ patch_received (EuropaPatchForm *patchForm, guchar *patch, int len)
 
   patchHex = bintohex (patch, len, FALSE);
 
-  g_print("patch: %s old\n", patchHex);
+  //g_print("patch: %s\n", patchHex);
 
   printStatusMesg(GTK_STATUSBAR(patchForm->statusBar), patchHex);
   g_free(patchHex);

@@ -169,7 +169,7 @@ validate_patch (guchar *p, gint len)
 
   gchar buf[43];
 	tohex(p, 6, buf, 43);
-  g_print("validate: %s\n", buf);
+  //g_print("validate: %s\n", buf);
 
   if (len > PATCH_MAX_LEN )
   {

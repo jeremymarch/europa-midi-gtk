@@ -1,5 +1,6 @@
- /*
-    europa-gtk - a midi librarian for the Roland Jupiter 6 synth with Europa mod.
+ 
+/**  
+  *  europa-gtk - a midi librarian for the Roland Jupiter 6 synth with Europa mod.
     Copyright (C) 2005-2021  Jeremy March
 
     This program is free software: you can redistribute it and/or modify
@@ -13,8 +14,9 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
-*/
+    along with this program.  If not, see <https://www.gnu.org/licenses/>. 
+  */
+
 
 #define SYSEX_COMMAND_BYTE 5
 
