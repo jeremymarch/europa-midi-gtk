@@ -1428,6 +1428,21 @@ static GOptionEntry entries[] =
   { NULL }
 };
 
+void init_db(MYSQL *conn) {
+
+  char *query = "CREATE TABLE IF NOT EXISTS `patches` ("
+  "`patch_id` int(10) unsigned NOT NULL AUTO_INCREMENT,"
+  "`name` varchar(255) NOT NULL,"
+  "`temp` varchar(255) NOT NULL,"
+  "`patch` varchar(255) NOT NULL,"
+  "`temp2` varchar(255) DEFAULT NULL,"
+  "`timeadded` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),"
+  "PRIMARY KEY (`patch_id`)"
+") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+
+  mysql_query(conn, query);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -1460,6 +1475,8 @@ main (int argc, char **argv)
     g_print("Could not connect to database\n");
     exit(1);
   }
+
+  init_db(mysql);
 
   patchForm = draw_panel();
   draw_library_window (patchForm);
