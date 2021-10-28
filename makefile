@@ -3,9 +3,7 @@ DEBUG = -g -Wall -DGLIB_VERSION_MIN_REQUIRED=GLIB_VERSION_2_44 -DGLIB_VERSION_MA
 #DEBUG = -O3 -march=pentium3
 INCLUDES = `mysql_config --cflags`
 LIBS = `mysql_config --libs`
-GTK_THD_LIBS = `pkg-config --libs gthread-2.0 gtk+-2.0`
 GTK_LIBS = `pkg-config --libs gtk+-2.0`
-
 GTK_INC = `pkg-config --cflags gtk+-2.0`
 ALSA_LIBS = -lasound
 

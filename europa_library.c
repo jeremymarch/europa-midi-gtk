@@ -71,7 +71,7 @@ libSetPatch (GtkTreeSelection *sel, gpointer patchForm)
   return FALSE;
 }
 
-int
+void
 fill_library(GtkListStore *listStore)
 {
   MYSQL_RES *res_set;
@@ -79,15 +79,12 @@ fill_library(GtkListStore *listStore)
   gchar query[] = "SELECT patch_id, name FROM patches ORDER BY name;";
   GtkTreeIter iter;
 
-  if (mysql_query(mysql, query) != 0)
-  {
-    return 0;
+  if (mysql_query(mysql, query) != 0) {
+    return;
   }
 
-  if ((res_set = mysql_store_result (mysql)) == NULL)
-  {
-    g_print("store result failed");
-    return 0;
+  if ((res_set = mysql_store_result (mysql)) == NULL) {
+    return;
   }
 
   gtk_list_store_clear(GTK_LIST_STORE(listStore));
@@ -99,8 +96,6 @@ fill_library(GtkListStore *listStore)
   }
 
   mysql_free_result(res_set);
-
-  return 1;
 }
 
 gulong sigSelectionChanged = 0;
@@ -122,7 +117,7 @@ cb_fill(GtkWidget *button, gpointer list)
   return FALSE;
 }
 
-gint
+void
 draw_library_window(EuropaPatchForm *patchForm)
 {
   GtkWidget *window, *list, *button, *vbox;
@@ -162,6 +157,4 @@ draw_library_window(EuropaPatchForm *patchForm)
   fill_library(listStore);
 
   gtk_widget_show_all(window);
-
-  return 1;
 }

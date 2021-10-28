@@ -17,8 +17,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>. 
 */
 
-int
-draw_library_window(EuropaPatchForm *patchForm);
+void draw_library_window(EuropaPatchForm *patchForm);
 
-int
-fill_library(GtkListStore *listStore);
+void fill_library(GtkListStore *listStore);
