@@ -4,7 +4,7 @@ europa-midi-gtk is a midi librarian for the Roland Jupiter 6 synth with Europa m
 
 This is an archive of old code.  The code in the original github commit was updated March 6, 2005.  
 
-To install you'll need:
+To build it you'll need:
 
 - sudo apt-get install gtk2.0
 - sudo apt-get install build-essentials libgtk2.0-dev

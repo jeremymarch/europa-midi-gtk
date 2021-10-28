@@ -11,6 +11,9 @@ ALSA_LIBS = -lasound
 
 all: europa
 
+main.o: main.c
+	$(CC) $(DEBUG) -c main.c $(GTK_INC) $(INCLUDES)
+
 europa_patch.o: europa_patch.c
 	$(CC) $(DEBUG) -c europa_patch.c $(GTK_INC) $(INCLUDES)
 
@@ -23,8 +26,8 @@ europa_mysql.o: europa_mysql.c
 europa_library.o: europa_library.c
 	$(CC) $(DEBUG) -c europa_library.c $(GTK_INC) $(INCLUDES)
 
-europa: europa_patch.o europa_midi.o europa_mysql.o europa_library.o
-	$(CC) $(DEBUG) -o europa europa_patch.o europa_midi.o europa_mysql.o europa_library.o $(ALSA_LIBS) $(GTK_LIBS) $(LIBS)
+europa: europa_patch.o europa_midi.o europa_mysql.o europa_library.o main.o
+	$(CC) $(DEBUG) -o europa main.o europa_patch.o europa_midi.o europa_mysql.o europa_library.o $(ALSA_LIBS) $(GTK_LIBS) $(LIBS)
 
 clean:
-	rm -f europa europa_patch.o europa_midi.o europa_mysql.o europa_library.o
+	rm -f europa *.o

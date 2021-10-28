@@ -55,5 +55,8 @@ typedef struct {
   vSliders   sliders[NUM_SLIDERS];
 } EuropaPatchForm;
 
-void
-patch_received (EuropaPatchForm *patchForm, guchar *patch, int len);
+void patch_received (EuropaPatchForm *patchForm, guchar *patch, int len);
+
+EuropaPatchForm *draw_panel();
+
+gboolean poll_func (GIOChannel *chan, GIOCondition con, gpointer patchForm);
